@@ -1,3 +1,5 @@
+let timeDisplay = document.getElementById('time');
+
 let stopwatchTime = document.getElementById('stopwatch-time');
 let time;
 let today = new Date();
@@ -14,6 +16,7 @@ let timerOutput = document.getElementById('timer-output');
 let timerId = 0;
 document.addEventListener('DOMContentLoaded', () =>
 {
+
     // Time
     updateTime();
     setInterval(updateTime, 1000);
@@ -78,12 +81,13 @@ document.addEventListener('DOMContentLoaded', () =>
 
     timerSeconds.addEventListener('change', () =>
     {
-        timeRemaining += timerSeconds.valueAsNumber * 1000;
+        timeRemaining += timerSeconds.valueAsNumber * 1000
     });
 
     document.getElementById('start-timer')
         .addEventListener('click', () =>
     {
+        timeRemaining += 1000;
         timeChange = Date.now();
         timerId = setInterval(startTimer, 1);
     });
@@ -91,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () =>
     document.getElementById('stop-timer')
         .addEventListener('click', () =>
     {
-        clearInterval(timerId);
-        timerOutput.textContent = "00:00:00";
+        stopTimer();
     });
 });
 
@@ -101,16 +104,23 @@ function startTimer()
     timeRemaining -= Date.now() - timeChange;
     timeChange = Date.now();
 
-    if(timeRemaining <= 0)
-    {
-        clearInterval(timerId);
-    }
 
     timerOutput.textContent = `${addZero(Math.floor(timeRemaining / 3600000 % 24), false)}:` +   // Hours
-                              `${addZero(Math.floor(timeRemaining / 60000 % 60), false)}:` +     // Minutes
-                              `${addZero(Math.floor(timeRemaining / 1000 % 60), false)}`;        // Seconds
+        `${addZero(Math.floor(timeRemaining / 60000 % 60), false)}:` +     // Minutes
+        `${addZero(Math.floor(timeRemaining / 1000 % 60), false)}`;        // Seconds
+
+    if(timeRemaining <= 0)
+    {
+        stopTimer();
+    }
 }
 
+function stopTimer()
+{
+    clearInterval(timerId);
+    timerOutput.textContent = "00:00:00";
+    alert('Timer Finished');
+}
 /*
 String.prototype.replaceAt = function(index, replacement)
 {
@@ -120,6 +130,7 @@ String.prototype.replaceAt = function(index, replacement)
 
 function checkAlarm()
 {
+    console.log(today.getSeconds());
     let alarmMessage = document.getElementById('alarm-message');
 
     if(String(alarmTime.value) === updateTime(false, false))
@@ -133,7 +144,6 @@ function updateTime(seconds = false, amPm = true)
     let time = "";
 
     time += addZero(today.getHours())
-
     if(seconds === false)
     {
         time += addZero(today.getMinutes(), false);
@@ -144,10 +154,8 @@ function updateTime(seconds = false, amPm = true)
         time += addZero(today.getSeconds(), false);
     }
 
-    let ampm = today.getHours() >= 12 ? "PM" : "AM"
-
-    document.getElementById('time')
-        .textContent = time + " " + ampm;
+    let ampm = today.getHours() >= 12 ? "PM" : "AM";
+    timeDisplay.innerText = time + " " + ampm;
 
     return time;
 }
@@ -173,3 +181,4 @@ function addZero(num, moreDigits = true)
     }
     return digit;
 }
+
