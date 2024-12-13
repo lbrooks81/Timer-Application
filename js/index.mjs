@@ -17,11 +17,11 @@ let timerId = 0;
 document.addEventListener('DOMContentLoaded', () =>
 {
 
-    // Time
+    //* Time
     updateTime();
     setInterval(updateTime, 1000);
 
-    // Stopwatch
+    //* Stopwatch
     let swStart = document.getElementById('sw-start');
     let swStop = document.getElementById('sw-stop');
     let swReset = document.getElementById('sw-reset');
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () =>
         paused = false;
     });
 
-    // Alarm
+    //* Alarm
     alarmTime.addEventListener('change', () =>
     {
         if(alarmFinished === false)
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () =>
     });
 
 
-    // Timer
+    //* Timer
     timerHours.addEventListener('change', () =>
     {
         timeRemaining += timerHours.valueAsNumber * 3600000;
@@ -105,9 +105,9 @@ function startTimer()
     timeChange = Date.now();
 
 
-    timerOutput.textContent = `${addZero(Math.floor(timeRemaining / 3600000 % 24), false)}:` +   // Hours
-        `${addZero(Math.floor(timeRemaining / 60000 % 60), false)}:` +     // Minutes
-        `${addZero(Math.floor(timeRemaining / 1000 % 60), false)}`;        // Seconds
+    timerOutput.textContent = `${addZero(Math.floor(timeRemaining / 3600000 % 24), false)}:` +   //* Hours
+        `${addZero(Math.floor(timeRemaining / 60000 % 60), false)}:` +     //* Minutes
+        `${addZero(Math.floor(timeRemaining / 1000 % 60), false)}`;        //* Seconds
 
     if(timeRemaining <= 0)
     {
@@ -130,10 +130,11 @@ String.prototype.replaceAt = function(index, replacement)
 
 function checkAlarm()
 {
-    console.log(today.getSeconds());
     let alarmMessage = document.getElementById('alarm-message');
 
-    if(String(alarmTime.value) === updateTime(false, false))
+    // TODO does not work in PM times
+
+    if(String(alarmTime.value % 12) === updateTime(false, false))
     {
         alert(alarmMessage.value);
         alarmFinished = true;
@@ -143,7 +144,8 @@ function updateTime(seconds = false, amPm = true)
 {
     let time = "";
 
-    time += addZero(today.getHours())
+    time += addZero(today.getHours() % 12);
+
     if(seconds === false)
     {
         time += addZero(today.getMinutes(), false);
